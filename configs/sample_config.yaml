@@ -25,6 +25,7 @@ protocol_settings:
   decoder:
     endianness: "big"                    # "big" or "little"
     scale_factor: 1.0                    # Multiplier for raw sensor values
+    dtype: int32
 
 lsl_stream:
   name: "Alpha_Raw_Data"
@@ -42,5 +43,5 @@ lsl_stream:
   
 
 commands:
-  start_stream: "sys start cnt"
-  stop_stream: "sys stop cnt"
+  start_stream: "sys start_cnt"
+  stop_stream: "sys stop_cnt"

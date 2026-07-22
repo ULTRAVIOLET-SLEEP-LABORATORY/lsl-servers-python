@@ -1,6 +1,7 @@
 import threading
 import yaml
 from core.engine import Engine
+import numpy as np
 
 
 class Device:
@@ -26,7 +27,7 @@ class Device:
         self.engine.start()
         self._stop_event.clear()
 
-        self.control_tx_monitor_thread = threading.Thread(target=self._monitor_control_tx_queue, daemon=True)           # define the threads
+        self.control_tx_monitor_thread = threading.Thread(target=self._monitor_control_rx_queue, daemon=True)           # define the threads
         self.heartbeat_thread = threading.Thread(target=self._heartbeat, daemon=True)
         self.unpack_data_thread = threading.Thread(target=self._unpack_data_rx_queue, daemon=True)
 
@@ -48,15 +49,15 @@ class Device:
             t.join(timeout=2.0)
 
 
-    def _monitor_control_tx_queue(self):
+    def _monitor_control_rx_queue(self):
         '''print received control commands from the device'''
 
         while not self._stop_event.is_set():
             try:
-                command = self.engine.control_tx_queue.popleft(timeout=0.5)
+                command = self.engine.control_rx_queue.popleft(timeout=0.5)
             except TimeoutError:
                 continue
-            print(command)
+            print("[Device: Monitor Control RX Queue] Received: ", command)
 
 
     def _heartbeat(self):
@@ -81,6 +82,6 @@ class Device:
     def _parse_data(self, data):
         '''convert raw network packets to numpy datatype'''
 
-        return np.frombuffer(data, dtype=self.params["dtype"])
+        return np.frombuffer(data, dtype=self.params["protocol_settings"]["decoder"]["dtype"])
 
 

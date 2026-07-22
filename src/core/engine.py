@@ -7,6 +7,8 @@ import threading
 from collections import deque
 
 
+DEBUG = False
+
 class Engine:
     '''Engine for network operations and data structures.
     Manages queues.'''
@@ -72,6 +74,7 @@ class Engine:
                 received_command, _addr = self.control_socket.recvfrom(self.MAX_UDP_SIZE)
             except socket.timeout:
                 continue
+            if DEBUG: print("[Control RX Queue] Response: ", received_command)
             self.control_rx_queue.append(received_command)
 
 
@@ -83,6 +86,7 @@ class Engine:
                 command = self.control_tx_queue.popleft(timeout=self._recv_timeout)
             except TimeoutError:
                 continue
+            if DEBUG: print("[Control TX Queue] Sending: ", command)
             self.control_socket.sendto(command, (self.device_ip, self.device_control_port))
 
 
@@ -94,6 +98,7 @@ class Engine:
                 received_data, _addr = self.data_socket.recvfrom(self.MAX_UDP_SIZE)
             except socket.timeout:
                 continue
+            if DEBUG: print("[Data RX Queue] Received: ", received_data)
             self.data_rx_queue.append(received_data)
 
 
@@ -105,7 +110,8 @@ class Engine:
                 data = self.out_tx_queue.popleft(timeout=self._recv_timeout)
             except TimeoutError:
                 continue
-            self.lsl_socket.send(data)
+            if DEBUG: print("[Data TX Queue] Sending: ", data)
+            # self.lsl_socket.send(data)
 
 
 
