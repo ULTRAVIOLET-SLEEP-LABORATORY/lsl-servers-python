@@ -3,9 +3,8 @@
 # =====================================================================
 
 server:
-  name: "Device_Alpha_Bridge"
-  protocol_class: "SimpleFloatProtocol"  # Must match the class name in your python code
-  enabled: true
+  name: "MEOWER-EEG-SERVER"
+  device: "Meower_EEG"
 
 network:
   device_ip: "192.168.1.128"                    # upstream IP to bind locally or listen to
@@ -15,24 +14,38 @@ network:
   local_control_port: 5000                 # Local control port
   local_data_port: 5001                    # Local data port
 
+
+
 protocol_settings:
   heartbeat:
     required: true
     interval_sec: 5.0
-    payload_hex: "574F4F465F574F4F46"              # Hex representation of "WOOF_WOOF"
+    command: "WOOF_WOOF"              # Heartbeat command ascii
   
   # Custom settings specific to this hardware's decoder
-  decoder:
-    endianness: "big"                    # "big" or "little"
-    scale_factor: 1.0                    # Multiplier for raw sensor values
-    dtype: int32
+  packet:
+    body:
+      format: ">f"
+      scale_factor: 5.36441803e-7                    # Multiplier for raw sensor values
+      dtype: int32
+      timestamp: 
+        scale_factor: 8.0e-6
+    battery:
+      length: 4                             # tail length in bytes
+      format: '<f4'                         # little endian float32
 
-lsl_stream:
-  name: "Alpha_Raw_Data"
+
+
+
+
+
+lsl_stream_eeg:
+  name: "Meower_EEG_Stream_0"
   type: "EEG"
+  channel_count: 16
   nominal_srate: 250.0                   # Sampling rate in Hz
   channel_format: "float32"              # float32, int32, string, etc.
-  source_id: "alpha_hw_sn_9872"
+  source_id: "EEG_0"
   
   # Named metadata channels for clean downstream analysis
   channels:
@@ -40,8 +53,18 @@ lsl_stream:
     - { label: "Ch2", unit: "microvolts", location: "Fp2" }
     - { label: "Ch3", unit: "microvolts", location: "O1" }
     - { label: "Ch4", unit: "microvolts", location: "O2" }
+
+
+lsl_stream_battery:
+  name: "Meower_Batery_Stream_0"
+  type: "Telemetry"
+  channel_count: 1
+  nominal_srate: 0.0                   # 0.0 indicates irregular / chunked sample rate
+  channel_format: "float32"              # float32, int32, string, etc.
+  source_id: "BATT_0"
   
 
 commands:
   start_stream: "sys start_cnt"
   stop_stream: "sys stop_cnt"
+  heartbeat: "WOOF_WOOF"

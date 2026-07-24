@@ -34,13 +34,14 @@ class Engine:
         self.data_rx_queue = BlockingDeque(maxlen=100)                                              # create data receive queue
         self.out_tx_queue = BlockingDeque(maxlen=100)                                               # create generic out queue
 
-        # placeholder — swap for a real pylsl StreamOutlet before this is used
-        self.lsl_socket = None
 
         self._stop_event = threading.Event()
         self._recv_timeout = 0.5  # seconds; lets loops check _stop_event periodically
         self.control_socket.settimeout(self._recv_timeout)
         self.data_socket.settimeout(self._recv_timeout)
+
+        # out stream. List of callback functions that accept data from the out_tx_queue
+        self.ostream = []
 
 
     def start(self):
@@ -111,7 +112,8 @@ class Engine:
             except TimeoutError:
                 continue
             if DEBUG: print("[Data TX Queue] Sending: ", data)
-            # self.lsl_socket.send(data)
+            for function in self.ostream:
+                function(data)
 
 
 

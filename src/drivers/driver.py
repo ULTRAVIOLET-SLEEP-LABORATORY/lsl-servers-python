@@ -1,10 +1,12 @@
+from abc import ABC, abstractmethod
 import threading
 import yaml
 from core.engine import Engine
 import numpy as np
+import struct
 
 
-class Device:
+class BaseDriver(ABC):
 
     def __init__(self, config_file):
 
@@ -17,7 +19,7 @@ class Device:
 
     
     def send_command(self, command):
-        '''send command to the board'''
+        '''Queue up commands to send to the board'''
         self.engine.control_tx_queue.append(command)
 
 
@@ -64,7 +66,7 @@ class Device:
         '''periodically send heartbeat command to keep device on'''
         
         while not self._stop_event.is_set():
-            self.send_command(bytes.fromhex(self.params["protocol_settings"]["heartbeat"]["payload_hex"]))
+            self.send_command(self.params["commands"]["heartbeat"].encode('ascii'))
             self._stop_event.wait(timeout=self.params["protocol_settings"]["heartbeat"]["interval_sec"])
     
     def _unpack_data_rx_queue(self):
@@ -76,12 +78,21 @@ class Device:
             except TimeoutError:
                 continue
 
-            self.engine.out_tx_queue.append(self._parse_data(data))
+            self.engine.out_tx_queue.append(self._parse_packet(data))
+
+
+
+    @abstractmethod
+    def _parse_packet(self, raw_bytes: bytes) -> dict:
+        """Override this in a subclass to implement protocol-specific unpacking.
+
+        Must return a dict with:
+          - 'channels': np.ndarray of shape (N, num_channels)
+          - 'timestamps': np.ndarray of relative times in seconds (N,)
+          - 'metadata': optional dict (battery, packet counter, etc.)
+        """
+        pass
 
     
-    def _parse_data(self, data):
-        '''convert raw network packets to numpy datatype'''
-
-        return np.frombuffer(data, dtype=self.params["protocol_settings"]["decoder"]["dtype"])
 
 

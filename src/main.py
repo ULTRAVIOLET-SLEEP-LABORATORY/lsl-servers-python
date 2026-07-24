@@ -1,9 +1,9 @@
-from drivers.driver import Device
+from drivers.meower_driver import MeowerLSLDriver
 import time
 
 def main():
-    device_config = "/home/joshua/src/ULTRAVIOLET-SLEEP-LABORATORY/lsl-servers-python/configs/sample_config.yaml"
-    device = Device(device_config)
+    device_config = "/home/joshua/src/ULTRAVIOLET-SLEEP-LABORATORY/lsl-servers-python/configs/meower_config.yaml"
+    device = MeowerLSLDriver(device_config)
     
 
     device.start()
