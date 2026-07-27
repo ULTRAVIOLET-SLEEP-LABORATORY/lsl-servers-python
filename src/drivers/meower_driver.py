@@ -45,6 +45,8 @@ class MeowerLSLDriver(BaseDriver):
         # Create the outlet that broadcasts the stream on the local network
         self.data_outlet = StreamOutlet(self.data_info)
         self.battery_outlet = StreamOutlet(self.batt_info)
+        print(self.data_info)
+        print(self.batt_info)
         print(f"LSL Stream '{self.data_info.name()}' initialized and broadcasting...")
         print(f"LSL Stream '{self.batt_info.name()}' initialized and broadcasting...")
 

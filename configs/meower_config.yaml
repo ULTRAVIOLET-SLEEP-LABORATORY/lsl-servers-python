@@ -44,7 +44,7 @@ lsl_stream_eeg:
   type: "EEG"
   channel_count: 16
   nominal_srate: 250.0                   # Sampling rate in Hz
-  channel_format: "float32"              # float32, int32, string, etc.
+  channel_format: "double64"              # float32, int32, string, double64, etc.
   source_id: "EEG_0"
   
   # Named metadata channels for clean downstream analysis
@@ -60,7 +60,7 @@ lsl_stream_battery:
   type: "Telemetry"
   channel_count: 1
   nominal_srate: 0.0                   # 0.0 indicates irregular / chunked sample rate
-  channel_format: "float32"              # float32, int32, string, etc.
+  channel_format: "double64"              # float32, int32, string, double64, etc.
   source_id: "BATT_0"
   
 
