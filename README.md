@@ -13,22 +13,22 @@ It is designed so that much of the functionality is defined in a .yaml file (and
 # Core Architecture
 The framework relies on an Engine–Driver architecture to separate networking mechanics from device payload logic:
 
-+-----------------------------------------------------------------------+
-|                                Driver                                 |
-|  - Configured by YAML file                                            |
-|  - Holds device-specific logic, payload parsing, & control commands  |
-+-----------------------------------+-----------------------------------+
-                                    | owns
-                                    v
-+-----------------------------------------------------------------------+
-|                                Engine                                 |
-|  - Manages low-level UDP socket binding & LSL StreamOutlets/Inlets    |
-|  - Handles async thread/queue processing for incoming/outgoing packets|
-+-----------------------------------------------------------------------+
-        ^                                                   ^
-        | UDP Packets                                       | LSL Outlets
-        v                                                   v
-   [ Biosensor ]                                   [ LSL Network / Apps ]
++-----------------------------------------------------------------------+  
+|                                Driver                                 |  
+|  - Configured by YAML file                                            |  
+|  - Holds device-specific logic, payload parsing, & control commands   |  
++-----------------------------------+-----------------------------------+  
+                                    | owns  
+                                    v  
++-----------------------------------------------------------------------+  
+|                                Engine                                 |  
+|  - Manages low-level UDP socket binding & LSL StreamOutlets/Inlets    |  
+|  - Handles async thread/queue processing for incoming/outgoing packets|  
++-----------------------------------------------------------------------+  
+        ^                                                   ^  
+        | UDP Packets                                       | LSL Outlets  
+        v                                                   v  
+   [ Biosensor ]                                   [ LSL Network / Apps ]  
 
 
 
@@ -52,7 +52,7 @@ awakens to process data whenever there is any in the queue.
 
 It is possible that this project is not robust enough for some setups. Perhaps some projects require the ability 
 to send data to the biosensors which this currently cannot do. However, most of this could be done with a little
-more thought and code i.e. adding another queue and passing callback function around.
+more thought and code i.e. adding another queue and passing callback functions around.
 
 
 
