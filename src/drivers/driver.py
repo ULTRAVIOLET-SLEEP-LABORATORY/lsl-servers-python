@@ -29,11 +29,11 @@ class BaseDriver(ABC):
         self.engine.start()
         self._stop_event.clear()
 
-        self.control_tx_monitor_thread = threading.Thread(target=self._monitor_control_rx_queue, daemon=True)           # define the threads
+        self.control_rx_monitor_thread = threading.Thread(target=self._monitor_control_rx_queue, daemon=True)           # define the threads
         self.heartbeat_thread = threading.Thread(target=self._heartbeat, daemon=True)
         self.unpack_data_thread = threading.Thread(target=self._unpack_data_rx_queue, daemon=True)
 
-        self.control_tx_monitor_thread.start()          # start all of the threads
+        self.control_rx_monitor_thread.start()          # start all of the threads
         self.heartbeat_thread.start()
         self.unpack_data_thread.start()
 
@@ -47,7 +47,7 @@ class BaseDriver(ABC):
 
         self._stop_event.set()
 
-        for t in (self.control_tx_monitor_thread, self.heartbeat_thread, self.unpack_data_thread):
+        for t in (self.control_rx_monitor_thread, self.heartbeat_thread, self.unpack_data_thread):
             t.join(timeout=2.0)
 
 
