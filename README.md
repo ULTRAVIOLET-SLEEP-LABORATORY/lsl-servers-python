@@ -1,6 +1,7 @@
 # lsl-servers-python
 Rebroadcast udp biosensor streams over LSL (lab streaming layer).
 
+Run by creating a config, editing, and running src/main.py. Create your own driver which inherits from BaseDriver in src/drivers/driver.py for additional and custom functionality.
 
 lsl-servers-python is a Python-based framework designed to bridge raw UDP hardware communication and the Lab Streaming Layer (LSL) for biosensor data ingestion and streaming.
 
