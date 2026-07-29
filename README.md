@@ -71,9 +71,9 @@ Translates raw binary/UDP packets into structured numeric samples (and vice vers
 Provides extensible hook methods (parse_packet, on_start, send_command, etc.) that can be overridden per device.
 
 ### Driver
-The Driver implements the high level logic about what command to send to the biosensors, and how to process 
+The Driver implements the high level logic about what commands to send to the biosensors, and how to process 
 received data. The Driver spawns three threads. One to monitor telemetry sent from devices, one to send the 
 "heartbeat" keep alive control signals, and one to process received data. Some of the Driver methods are intended 
 to be overwritten, especially _parse_packet(), since this changes on a per-device basis.
 
-I also want to add functionality for direct communication of devices from the terminal.
+I also want to add functionality for direct communication with devices from the terminal.
